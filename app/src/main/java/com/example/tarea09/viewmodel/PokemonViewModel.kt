@@ -1,6 +1,5 @@
 package com.example.tarea09.viewmodel
 
-
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,6 +17,19 @@ class PokemonViewModel : ViewModel() {
 
     var errorMessage by mutableStateOf<String?>(null)
         private set
+
+    var searchQuery by mutableStateOf("")
+        private set
+
+    // Lista filtrada basada en la consulta de búsqueda
+    val filteredPokemonList: List<PokemonSpecies>
+        get() = if (searchQuery.isEmpty()) {
+            pokemonList
+        } else {
+            pokemonList.filter {
+                it.name.contains(searchQuery.trim(), ignoreCase = true)
+            }
+        }
 
     init {
         getPokemonSpecies()
@@ -44,5 +56,10 @@ class PokemonViewModel : ViewModel() {
                 isLoading = false
             }
         }
+    }
+
+    // Función para actualizar la consulta de búsqueda
+    fun updateSearchQuery(query: String) {
+        searchQuery = query
     }
 }
